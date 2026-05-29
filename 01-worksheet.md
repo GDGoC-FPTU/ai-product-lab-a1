@@ -63,11 +63,11 @@ Hãy sử dụng **4 Lenses** dưới đây để quét qua hoạt động vận
 ### 📝 List bài toán của tôi:
 | # | Subsidiary (VinFast/Xanh SM...) | Lens | Mô tả ngắn bài toán |
 |---|----------------------------------|------|---------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Xanh SM | Lặp lại | Ghép yêu cầu tìm đồ thất lạc của khách với báo cáo đồ nhặt được từ tài xế dựa trên mô tả món đồ, thời gian chuyến, biển số xe, tuyến đường. |
+| 2 | Vinpearl | Tốn thời gian | Điều phối dọn phòng theo ưu tiên thực tế: khách check-in sớm, phòng VIP, phòng vừa check-out đặc biệt trong ngày cao điểm |
+| 3 | Vinmec | Lặp lại | Nhân viên bảo lãnh viện phí phải kiểm tra hồ sơ bảo hiểm: thẻ bảo hiểm, giấy tờ tùy thân, chẩn đoán, chỉ định, điều khoản loại trừ. |
+| 4 | Vinmec | Lặp lại | Tổng hợp câu hỏi thường gặp của bệnh nhân trước phẫu thuật hoặc xét nghiệm: nhịn ăn bao lâu, mang giấy tờ gì, đến quầy nào, chi phí tạm ứng bao nhiêu |
+| 5 | VinFast | Pain | Sau khi gửi xe bảo dưỡng/sửa chữa, khách thường phải gọi hỏi “xe xong chưa?”, “đang chờ gì?”. Cố vấn dịch vụ phải hỏi kỹ thuật viên, kiểm tra phiếu sửa chữa rồi tự nhắn lại cho khách |
 
 ---
 
@@ -75,26 +75,100 @@ Hãy sử dụng **4 Lenses** dưới đây để quét qua hoạt động vận
 
 Chọn **top 3 bài toán** từ danh sách trên và hoàn thiện **3 Quick Problem Cards** dưới đây (10 phút/card).
 
-```
+## Quick Problem Card #1 — Xanh SM: Ghép yêu cầu tìm đồ thất lạc
+
+```text
 ┌─────────────────────────────────────────────────────────────┐
-│ QUICK PROBLEM CARD #___                                     │
+│ QUICK PROBLEM CARD #1                                       │
 │                                                             │
-│ Bài toán (1 câu): ________________________________________  │
+│ Bài toán: Ghép yêu cầu tìm đồ thất lạc của khách với báo    │
+│ cáo đồ nhặt được từ tài xế Xanh SM.                         │
+│ Công ty thành viên: [ ] VinFast  [x] Xanh SM  [ ] Vinhomes  │
+│                     [ ] Vinmec   [ ] Khác                   │
+│                                                             │
+│ Ai đang đau? Nhân viên CSKH Lost & Found, khách bị mất đồ,  │
+│ và tài xế phải báo cáo/đối chiếu nhiều lần.                 │
+│                                                             │
+│ Workflow thủ công hiện tại:                                 │
+│   1. Khách gọi/tạo ticket mô tả món đồ bị mất               │
+│   -> 2. CSKH tra lịch sử chuyến, biển số, tài xế             │
+│   -> 3. CSKH đọc báo cáo đồ nhặt được từ tài xế              │
+│   -> 4. Gọi/nhắn xác minh với tài xế và khách                │
+│   -> 5. Hẹn điểm/thời gian trả đồ nếu khớp                   │
+│                                                             │
+│ Bước tốn thời gian/lỗi nhất: Bước 2-4 (15 phút/ticket)       │
+│ AI hỗ trợ ở bước: Trích xuất mô tả đồ vật, thời gian, tuyến  │
+│ đường và gợi ý top 3 báo cáo có khả năng khớp.               │
+│                                                             │
+│ Metric: Giảm thời gian xử lý ticket từ 15 phút xuống dưới   │
+│ 5 phút; >=80% ticket có gợi ý khớp đúng trong top 3.         │
+│                                                             │
+│ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM  [ ] Agent │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Quick Problem Card #2 — Vinpearl: Điều phối dọn phòng theo ưu tiên
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #2                                       │
+│                                                             │
+│ Bài toán: Điều phối dọn phòng theo ưu tiên thực tế trong    │
+│ ngày cao điểm tại khách sạn/resort Vinpearl.                │
 │ Công ty thành viên: [ ] VinFast  [ ] Xanh SM  [ ] Vinhomes  │
-│                     [ ] Vinmec   [ ] Khác (Ghi rõ)________  │
+│                     [ ] Vinmec   [x] Khác: Vinpearl         │
 │                                                             │
-│ Ai đang đau (Actor)? ______________________________________ │
+│ Ai đang đau? Trưởng bộ phận housekeeping, lễ tân, nhân viên │
+│ dọn phòng và khách check-in sớm.                            │
 │                                                             │
-│ Workflow thủ công hiện tại (3-5 bước):                      │
-│   1. ___ ──> 2. ___ ──> 3. ___ ──> 4. ___                   │
+│ Workflow thủ công hiện tại:                                 │
+│   1. Lễ tân gửi danh sách phòng cần ưu tiên qua chat/call   │
+│   -> 2. Housekeeping kiểm tra phòng vừa check-out/VIP        │
+│   -> 3. Trưởng ca gọi nhân viên để chia lại tuyến dọn        │
+│   -> 4. Cập nhật tình trạng phòng thủ công cho lễ tân        │
+│   -> 5. Lễ tân báo khách chờ hoặc cho nhận phòng             │
 │                                                             │
-│ Bước nào tốn thời gian/lỗi nhất? ___ (⏱ ___ phút/lượt)      │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? _____________________ │
+│ Bước tốn thời gian/lỗi nhất: Bước 2-4 (20 phút/lần điều phối)│
+│ AI hỗ trợ ở bước: Tổng hợp danh sách phòng, nhận diện mức   │
+│ ưu tiên và gợi ý thứ tự dọn phòng cho trưởng ca duyệt.       │
 │                                                             │
-│ Đo thành công bằng gì (Metric có số)? ______________________ │
-│   VD: "Giảm thời gian soạn phản hồi từ 10 min ──> under 2 min"│
+│ Metric: Giảm thời gian lập danh sách ưu tiên từ 20 phút     │
+│ xuống dưới 5 phút; giảm 30% trường hợp khách VIP/check-in   │
+│ sớm phải chờ quá 30 phút.                                   │
 │                                                             │
-│ Quick Architecture: [ ] No AI  [ ] Rule  [ ] LLM  [ ] Agent │
+│ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM  [ ] Agent │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Quick Problem Card #4 — Vinmec: Tổng hợp FAQ trước phẫu thuật/xét nghiệm
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #4                                       │
+│                                                             │
+│ Bài toán: Tổng hợp và trả lời nhất quán các câu hỏi thường  │
+│ gặp của bệnh nhân trước phẫu thuật hoặc xét nghiệm.         │
+│ Công ty thành viên: [ ] VinFast  [ ] Xanh SM  [ ] Vinhomes  │
+│                     [x] Vinmec   [ ] Khác                   │
+│                                                             │
+│ Ai đang đau? Nhân viên tổng đài/điều phối lịch, điều dưỡng  │
+│ tiền phẫu và bệnh nhân cần chuẩn bị đúng trước khi đến viện.│
+│                                                             │
+│ Workflow thủ công hiện tại:                                 │
+│   1. Bệnh nhân gọi hỏi cần chuẩn bị gì trước lịch hẹn        │
+│   -> 2. Nhân viên tra hướng dẫn theo loại xét nghiệm/mổ      │
+│   -> 3. Hỏi lại điều dưỡng/bác sĩ nếu tình huống không rõ    │
+│   -> 4. Trả lời qua điện thoại/tin nhắn cho bệnh nhân        │
+│   -> 5. Ghi chú lại các câu hỏi lặp lại trong ca trực        │
+│                                                             │
+│ Bước tốn thời gian/lỗi nhất: Bước 2-4 (8 phút/cuộc gọi)      │
+│ AI hỗ trợ ở bước: Tìm đúng FAQ theo loại lịch hẹn và draft  │
+│ câu trả lời dễ hiểu để nhân viên xác nhận trước khi gửi.     │
+│                                                             │
+│ Metric: Giảm thời gian trả lời từ 8 phút xuống dưới 2 phút; │
+│ >=90% câu trả lời dùng đúng nội dung FAQ đã được duyệt.      │
+│                                                             │
+│ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM  [ ] Agent │
 └─────────────────────────────────────────────────────────────┘
 ```
 
