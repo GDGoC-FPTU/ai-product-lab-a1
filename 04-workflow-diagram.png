@@ -1,0 +1,191 @@
+WORKFLOW DIAGRAM — Xanh SM Route Change Request (Current-State)
+Generated: 29 May 2026
+Diagram Type: ASCII Flowchart + Timeline Annotation
+
+═══════════════════════════════════════════════════════════════════════════════
+
+CURRENT STATE WORKFLOW: Xanh SM Dispatcher Handling Route Change Request
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ACTOR: Dispatcher at Xanh SM Dispatch Center (Hà Nội)                      │
+│ TRIGGER: Driver calls/messages requesting route change or passenger addition │
+│ GOAL: Process request, find alternative driver, notify affected passengers  │
+│ AVERAGE TIME: 6.5-9 minutes per request                                    │
+│ FREQUENCY: ~150 requests/day (peak hours: 5-7 PM: 30 req/hour)            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────┐
+│   STEP 1: RECEIVE REQUEST    │
+│                              │
+│ 🔔 Driver calls/texts:       │
+│    "I need to change route"  │
+│                              │
+│ ⏱️ Duration: 1 minute        │
+│ 📊 Manual/Auto: Manual       │
+│ 👤 Actor: Driver → Dispatcher│
+│ 🔄 Handoff: Phone/SMS        │
+└────────────┬─────────────────┘
+             │
+             ▼
+┌──────────────────────────────────────────────┐
+│ STEP 2: VERIFY CURRENT LOCATION 🔴 BOTTLENECK│
+│                                              │
+│ Dispatcher actions:                          │
+│ ✓ Opens web app to view driver GPS position  │
+│ ✓ Cross-references delivery map              │
+│ ✓ Identifies current & destination points    │
+│                                              │
+│ ⏱️ Duration: 2-3 minutes (SLOWEST STEP)      │
+│ 📊 Manual/Auto: 100% MANUAL                  │
+│ 👤 Actor: Dispatcher                         │
+│ 🛠️ Tools: Google Maps + Internal GPS System  │
+│ 🔄 Handoff: Data lookup (DB query)           │
+│                                              │
+│ BOTTLENECK REASON:                           │
+│ - Multiple systems to check (GPS, map, CRM)  │
+│ - Requires human interpretation of geography │
+│ - No automated suggestion system              │
+└────────────┬──────────────────────────────────┘
+             │
+             ▼
+┌──────────────────────────────────────────────┐
+│ STEP 3: SEARCH FOR ALTERNATIVE DRIVER 🔴 BOTTLENECK│
+│                                              │
+│ Dispatcher actions:                          │
+│ ✓ Opens Driver Status dashboard              │
+│ ✓ Manually scans list of "Available" drivers │
+│ ✓ Checks proximity to pickup/dropoff points  │
+│ ✓ Verifies driver qualifications (license)   │
+│ ✓ Reviews driver current load (passengers)   │
+│                                              │
+│ ⏱️ Duration: 2-3 minutes (SLOWEST STEP)      │
+│ 📊 Manual/Auto: 100% MANUAL                  │
+│ 👤 Actor: Dispatcher                         │
+│ 🛠️ Tools: Driver Status Dashboard + Manual   │
+│ 🔄 Handoff: Driver database lookup           │
+│                                              │
+│ BOTTLENECK REASON:                           │
+│ - No ranking/sorting by optimal distance     │
+│ - Dispatcher experience-dependent            │
+│ - Risk of suboptimal selection               │
+│ - Can miss better options due to screen     │
+│   scroll limits or fatigue                   │
+└────────────┬──────────────────────────────────┘
+             │
+             ▼
+┌──────────────────────────────┐
+│ STEP 4: NOTIFY PASSENGERS    │
+│                              │
+│ Dispatcher actions:          │
+│ ✓ Composes message/call:     │
+│   "Your ride will change"    │
+│ ✓ Sends SMS/call to:         │
+│   - Old passenger (cancel)   │
+│   - New passenger (confirm)  │
+│   - Both drivers (update)    │
+│                              │
+│ ⏱️ Duration: 1-2 minutes     │
+│ 📊 Manual/Auto: SEMI-MANUAL  │
+│    (SMS templates available) │
+│ 👤 Actor: Dispatcher         │
+│ 🔄 Handoff: SMS/Voice call   │
+│                              │
+│ RISK: Generic templates may  │
+│ not fit specific scenarios   │
+└────────────┬─────────────────┘
+             │
+             ▼
+┌──────────────────────────────┐
+│ STEP 5: UPDATE SYSTEM        │
+│                              │
+│ Dispatcher actions:          │
+│ ✓ Updates ride assignment    │
+│ ✓ Changes route in system    │
+│ ✓ Logs note about change     │
+│                              │
+│ ⏱️ Duration: 0.5 minutes     │
+│ 📊 Manual/Auto: 100% MANUAL  │
+│ 👤 Actor: Dispatcher         │
+│ 🔄 Handoff: System update    │
+└────────────┬─────────────────┘
+             │
+             ▼
+┌──────────────────────────────┐
+│ STEP 6: COMPLETE             │
+│                              │
+│ Status: ✅ Route change      │
+│ processed & passenger        │
+│ notified                     │
+│                              │
+│ 📊 QA: Ad-hoc verification   │
+└──────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⏱️ TIME BREAKDOWN:
+  Step 1: 1 min     [████              ] 15%
+  Step 2: 2.5 min   [████████████      ] 38% 🔴 BOTTLENECK
+  Step 3: 2.5 min   [████████████      ] 38% 🔴 BOTTLENECK
+  Step 4: 1.5 min   [████████          ] 23%
+  Step 5: 0.5 min   [██                ] 8%
+  ─────────────────────────────
+  TOTAL: 8.0 min    [████████████████] 100%
+  
+🔴 CRITICAL BOTTLENECK: Steps 2-3 consume 76% of total time (5 minutes)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔄 HANDOFF POINTS (Information Transfer Between People/Systems):
+
+  1. Driver → Dispatcher (Phone/SMS)
+  2. Dispatcher → GPS/CRM System (Manual lookup)
+  3. Dispatcher → Driver Status Dashboard (Manual scan)
+  4. Dispatcher → SMS/Voice System (Notification)
+  5. Dispatcher → Ride Assignment System (Update)
+
+RISK: Multiple handoff points = multiple opportunities for error/delay
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 KEY METRICS (Current State):
+  • Requests/day: ~150
+  • Peak hour requests: 30 (5-7 PM)
+  • Avg processing time: 8 minutes
+  • Std deviation: ±1.5 minutes
+  • Manual effort: 100% (all steps manual)
+  • Error rate (wrong driver selected): ~12%
+  • Customer satisfaction (route change): 78% (feedback post-ride)
+  • Dispatcher stress (peak hours): HIGH
+  • System CPU load during peak: 60-70%
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PAIN POINTS & OPPORTUNITIES:
+
+1. BOTTLENECK #1: Step 2 (Verify Location) 
+   - Problem: Dispatcher manually cross-checks GPS + map + CRM
+   - Opportunity: Automate GPS extraction + return to dispatcher as alert
+
+2. BOTTLENECK #2: Step 3 (Search for Driver)
+   - Problem: Dispatcher manually scans list, subject to fatigue/bias
+   - Opportunity: AI ranking by distance + AI suggestion of top 3 drivers
+   
+3. QUALITY ISSUE: Step 3 Driver Selection
+   - Problem: 12% error rate (wrong driver qualifications or too far)
+   - Opportunity: Rule-based validation + LLM reasoning for complex cases
+
+4. SCALABILITY ISSUE: Peak Hour Overload
+   - Problem: 30 requests/hour during 5-7 PM, dispatcher can't keep up
+   - Opportunity: Batch process requests, auto-assign when criteria met
+
+5. PASSENGER NOTIFICATION: Step 4
+   - Problem: Generic SMS templates don't fit all scenarios
+   - Opportunity: LLM generate context-aware, personalized messages
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Document prepared by: Vin Smart Future AI Product Team
+Diagram version: 1.0 (Current-State Analysis)
+Next step: See 02-deep-dive-report.md for Future-State AI-enabled workflow
+
+═══════════════════════════════════════════════════════════════════════════════
