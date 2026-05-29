@@ -1,2 +1,4 @@
 # Environment Dependencies
 # List all required python packages here.
+google-genai
+google-generativeai

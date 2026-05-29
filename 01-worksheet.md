@@ -63,11 +63,11 @@ Hãy sử dụng **4 Lenses** dưới đây để quét qua hoạt động vận
 ### 📝 List bài toán của tôi:
 | # | Subsidiary (VinFast/Xanh SM...) | Lens | Mô tả ngắn bài toán |
 |---|----------------------------------|------|---------------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | Vinfast | 1 | Duyệt claim bảo hành & quyết toán sửa chữa: cố vấn dịch vụ/kỹ thuật viên đọc mô tả lỗi, ảnh, DTC, lịch sử xe, rồi quyết định có bảo hành không.|
+| 2 | VinMec | 2 | Điều dưỡng/bác sĩ nhập thủ công tóm tắt bệnh án, chỉ định, dặn dò sau khám. |
+| 3 | VinFilm | 3 | AI Agent giúp biên kịch bộ phim ý tưởng thêm hấp dẫn, thu hút |
+| 4 | VinMec | 4 | 	Bệnh nhân phải chờ vì lịch khám, xét nghiệm, thanh toán, nhận thuốc không đồng bộ. |
+| 5 | XanhSM | 3 | Gợi ý điểm đón/trả chưa tối ưu trong hẻm, chung cư, Trung tâm thương mại, sân bay. |
 
 ---
 
@@ -95,6 +95,107 @@ Chọn **top 3 bài toán** từ danh sách trên và hoàn thiện **3 Quick Pr
 │   VD: "Giảm thời gian soạn phản hồi từ 10 min ──> under 2 min"│
 │                                                             │
 │ Quick Architecture: [ ] No AI  [ ] Rule  [ ] LLM  [ ] Agent │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Quick Problem Cards của tôi
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #1                                       │
+│                                                             │
+│ Bài toán: Cố vấn dịch vụ/kỹ thuật viên VinFast mất nhiều    │
+│ thời gian duyệt claim bảo hành vì phải đọc mô tả lỗi, ảnh,  │
+│ mã DTC và lịch sử xe trước khi quyết định có bảo hành không.│
+│ Công ty thành viên: [x] VinFast                             │
+│                                                             │
+│ Ai đang đau? Cố vấn dịch vụ, kỹ thuật viên, bộ phận bảo     │
+│ hành và khách hàng đang chờ phê duyệt sửa chữa.             │
+│                                                             │
+│ Workflow thủ công hiện tại (5 bước):                        │
+│   1. Khách/xưởng gửi mô tả lỗi, ảnh/video, mã DTC           │
+│   → 2. Cố vấn tra lịch sử VIN và điều kiện bảo hành         │
+│   → 3. Kỹ thuật viên kiểm tra, đề xuất labor/parts          │
+│   → 4. Bộ phận bảo hành duyệt/từ chối/yêu cầu bổ sung       │
+│   → 5. Xưởng báo lại khách và tiến hành sửa chữa            │
+│                                                             │
+│ Bước nào tốn nhất? Bước 2-4 (⏱ 20-30 phút/claim)            │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2-4              │
+│ (Tóm tắt hồ sơ claim -> Kiểm tra thiếu bằng chứng -> Gợi ý  │
+│ mã lỗi/labor/parts -> Route case rủi ro cho người duyệt)    │
+│                                                             │
+│ Đo thành công bằng gì (Metric có số)?                       │
+│ Giảm thời gian xử lý claim từ 25 phút xuống dưới 8 phút;    │
+│ 80% claim thường được auto-triage dưới 60 giây; giảm 20%    │
+│ case phải yêu cầu bổ sung hồ sơ do thiếu ảnh/DTC/VIN.       │
+│                                                             │
+│ Quick Architecture: [x] LLM Feature + Human-in-the-loop     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #2                                       │
+│                                                             │
+│ Bài toán: Bác sĩ/điều dưỡng VinMec mất nhiều thời gian nhập │
+│ thủ công tóm tắt bệnh án, chỉ định và dặn dò sau khám vào   │
+│ hệ thống, làm bệnh nhân phải chờ lâu hơn sau buổi khám.     │
+│ Công ty thành viên: [x] VinMec                              │
+│                                                             │
+│ Ai đang đau? Bác sĩ, điều dưỡng, nhân viên hành chính y tế  │
+│ và bệnh nhân đang chờ nhận giấy tờ/toa thuốc sau khám.      │
+│                                                             │
+│ Workflow thủ công hiện tại (5 bước):                        │
+│   1. Bác sĩ khám và trao đổi với bệnh nhân                  │
+│   → 2. Bác sĩ/điều dưỡng nhập triệu chứng, chẩn đoán        │
+│   → 3. Kiểm tra kết quả xét nghiệm/cận lâm sàng             │
+│   → 4. Viết dặn dò sau khám, toa thuốc, lịch tái khám       │
+│   → 5. Bệnh nhân nhận giấy tờ và ra quầy thanh toán         │
+│                                                             │
+│ Bước nào tốn nhất? Bước 2 và 4 (⏱ 8-12 phút/lượt khám)      │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2-4              │
+│ (Tạo draft SOAP note/tóm tắt bệnh án -> Gợi ý checklist     │
+│ thiếu thông tin -> Soạn dặn dò sau khám để bác sĩ duyệt)    │
+│                                                             │
+│ Đo thành công bằng gì (Metric có số)?                       │
+│ Giảm thời gian hoàn tất hồ sơ sau khám từ 10 phút xuống     │
+│ dưới 3 phút; 95% bản nháp có đủ trường bắt buộc; giảm 30%   │
+│ thời gian bệnh nhân chờ nhận giấy tờ sau khám.              │
+│                                                             │
+│ Quick Architecture: [x] LLM Feature + Human-in-the-loop     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ QUICK PROBLEM CARD #5                                       │
+│                                                             │
+│ Bài toán: XanhSM gợi ý điểm đón/trả chưa tối ưu tại hẻm,    │
+│ chung cư, trung tâm thương mại, sân bay khiến tài xế và     │
+│ khách phải gọi nhau nhiều lần, tăng thời gian đón và hủy xe.│
+│ Công ty thành viên: [x] Xanh SM                             │
+│                                                             │
+│ Ai đang đau? Tài xế XanhSM, khách đặt xe, đội điều phối và  │
+│ chăm sóc khách hàng phải xử lý khiếu nại/hủy chuyến.        │
+│                                                             │
+│ Workflow thủ công hiện tại (5 bước):                        │
+│   1. Khách nhập điểm đón/trả trên app                       │
+│   → 2. Hệ thống chọn GPS pin hoặc cổng gần nhất             │
+│   → 3. Tài xế di chuyển tới điểm gợi ý                      │
+│   → 4. Tài xế gọi/chat để tìm khách nếu sai điểm            │
+│   → 5. Khách/tài xế chờ, đổi điểm hoặc hủy chuyến           │
+│                                                             │
+│ Bước nào tốn nhất? Bước 2-4 (⏱ 3-7 phút/chuyến lỗi)         │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2 và 4           │
+│ (Học từ GPS, điểm hủy, điểm tài xế thật sự dừng, feedback   │
+│ để gợi ý pickup/dropoff tốt hơn và draft hướng dẫn ngắn)    │
+│                                                             │
+│ Đo thành công bằng gì (Metric có số)?                       │
+│ Giảm thời gian đón tại điểm khó từ 6 phút xuống dưới 3 phút;│
+│ giảm 15% hủy chuyến do không tìm thấy nhau; giảm 20% cuộc   │
+│ gọi giữa tài xế-khách trước khi đón.                        │
+│                                                             │
+│ Quick Architecture: [x] LLM Feature + ML ranking            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
