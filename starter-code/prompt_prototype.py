@@ -225,3 +225,5 @@ if __name__ == "__main__":
             print(f"❌ Error during execution: {e}")
             
         print("-" * 50 + "\n")
+    
+    sys.exit(0)
