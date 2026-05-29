@@ -1,6 +1,6 @@
 # Lab 02 — Deep-Dive Report: Vinmec Discharge Summary Automation
 
-> **Nhóm:** [Tên nhóm]
+> **Nhóm:** A1
 > **Bài toán chọn:** Card #1 — Vinmec Tóm tắt hồ sơ xuất viện
 > **Ngày:** 29/05/2026
 > **Thành viên:**
