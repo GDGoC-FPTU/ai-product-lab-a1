@@ -13,8 +13,13 @@ Instructions:
 import os
 import sys
 import io
-import google.genai as genai
-from google.genai import types
+
+try:
+    import google.genai as genai
+    from google.genai import types
+    GENAI_AVAILABLE = True
+except ImportError:
+    GENAI_AVAILABLE = False
 
 # Standard Model Identifier
 GEMINI_MODEL = "gemini-2.5-flash"
@@ -52,6 +57,9 @@ def evaluate_prompt(user_input: str) -> str:
     Calls the Gemini 2.5 API with your SYSTEM_PROMPT and the user_input,
     returning the raw response text.
     """
+    if not GENAI_AVAILABLE:
+        raise RuntimeError("google-genai SDK is not installed. Run: pip install google-genai")
+
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY or GOOGLE_API_KEY environment variable is not set.")
