@@ -54,7 +54,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: SYSTEM_PROMPT
-        setup-command: pip install -r requirements.txt
+        setup-command: ''
         command: python autograder/autograder.py --check-code-1
         timeout: 10
         max-score: 10
@@ -63,7 +63,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: evaluate_prompt
-        setup-command: pip install -r requirements.txt
+        setup-command: ''
         command: python autograder/autograder.py --check-code-2
         timeout: 10
         max-score: 10
@@ -72,7 +72,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: ADVERSARIAL_TESTS
-        setup-command: pip install -r requirements.txt
+        setup-command: ''
         command: python autograder/autograder.py --check-code-3
         timeout: 10
         max-score: 10
@@ -81,7 +81,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Prototype Script
-        setup-command: pip install -r requirements.txt
+        setup-command: ''
         command: python autograder/autograder.py --check-code-4
         timeout: 10
         max-score: 10
@@ -90,7 +90,7 @@ jobs:
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Safety Verification
-        setup-command: pip install -r requirements.txt
+        setup-command: ''
         command: python autograder/autograder.py --check-code-5
         timeout: 10
         max-score: 10
